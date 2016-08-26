@@ -36,7 +36,7 @@ docker_py_test() {
         -e DOCKER_HOST=tcp://$DOCKER_BRIDGE_IP:12375 \
         -v /tmp:/tmp \
         -v /var/run/docker.sock:/var/run/docker.sock \
-        joffrey/docker-py py.test $TESTS ; then
+        joffrey/docker-py py.test -k 'not test_container_cpuset' $TESTS ; then
         assert_raises "true"
     else
         assert_raises "false"
