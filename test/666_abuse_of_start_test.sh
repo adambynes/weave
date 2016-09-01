@@ -50,33 +50,33 @@ assert "docker_on $HOST1 inspect -f '{{.HostConfig.MemorySwap}}' c4b" "-1"
 
 echo "F"
 
-## Start c6 with both named and unnamed HostConfig
-#proxy docker_on $HOST1 create --name=c6 $SMALL_IMAGE $CHECK_ETHWE_UP
-#proxy docker_api_on $HOST1 POST /containers/c6/start '{"NetworkMode": "container:c2", "HostConfig": {"NetworkMode": "container:c1"}}'
-#check_hostconfig c6 container:c1
+# Start c6 with both named and unnamed HostConfig
+proxy docker_on $HOST1 create --name=c6 $SMALL_IMAGE $CHECK_ETHWE_UP
+proxy docker_api_on $HOST1 POST /containers/c6/start '{"NetworkMode": "container:c2", "HostConfig": {"NetworkMode": "container:c1"}}'
+check_hostconfig c6 container:c1
 
 echo "G"
 
-## Start c7 with an empty HostConfig and check this removes previous parameters, but still attaches to weave
-#proxy docker_on $HOST1 create --name=c7 --memory-swap -1 $SMALL_IMAGE $CHECK_ETHWE_UP
-#proxy docker_api_on $HOST1 POST /containers/c7/start '{"HostConfig":{}}'
-#assert "docker_on $HOST1 inspect -f '{{.HostConfig.MemorySwap}}' c7" "0"
-#check_hostconfig c7 default $docker_bridge_ip
+# Start c7 with an empty HostConfig and check this removes previous parameters, but still attaches to weave
+proxy docker_on $HOST1 create --name=c7 --memory-swap -1 $SMALL_IMAGE $CHECK_ETHWE_UP
+proxy docker_api_on $HOST1 POST /containers/c7/start '{"HostConfig":{}}'
+assert "docker_on $HOST1 inspect -f '{{.HostConfig.MemorySwap}}' c7" "0"
+check_hostconfig c7 default $docker_bridge_ip
 
 echo "H"
 
-## Start c8 in host network mode
-#proxy docker_on $HOST1 create --name=c8 $SMALL_IMAGE $CHECK_ETHWE_MISSING
-#proxy docker_api_on $HOST1 POST /containers/c8/start '{"HostConfig": {"NetworkMode": "host"}}'
-#check_hostconfig c8 host
+# Start c8 in host network mode
+proxy docker_on $HOST1 create --name=c8 $SMALL_IMAGE $CHECK_ETHWE_MISSING
+proxy docker_api_on $HOST1 POST /containers/c8/start '{"HostConfig": {"NetworkMode": "host"}}'
+check_hostconfig c8 host
 
 echo "I"
 
-## Start c10 in network of host container
-#proxy_start_container $HOST1 --name=c9 --net=host
-#proxy docker_on $HOST1 create --name=c10 $SMALL_IMAGE $CHECK_ETHWE_MISSING
-#proxy docker_api_on $HOST1 POST /containers/c10/start '{"HostConfig": {"NetworkMode": "container:c9"}}'
-#check_hostconfig c10 container:c9
+# Start c10 in network of host container
+proxy_start_container $HOST1 --name=c9 --net=host
+proxy docker_on $HOST1 create --name=c10 $SMALL_IMAGE $CHECK_ETHWE_MISSING
+proxy docker_api_on $HOST1 POST /containers/c10/start '{"HostConfig": {"NetworkMode": "container:c9"}}'
+check_hostconfig c10 container:c9
 
 echo "J"
 
