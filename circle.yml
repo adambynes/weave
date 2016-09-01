@@ -41,11 +41,11 @@ test:
     - cd $SRCDIR/test; eval $(./gce.sh hosts); export COVERAGE=true; ./run_all.sh:
         parallel: true
         timeout: 300
-#  post:
-#    - cd $SRCDIR/test; ./gce.sh destroy:
-#        parallel: true
-#    - test "$CIRCLE_NODE_INDEX" != "0" || (cd $SRCDIR/test; ./gen_coverage_reports.sh):
-#        parallel: true
+  post:
+    - cd $SRCDIR/test; ./gce.sh destroy:
+        parallel: true
+    - test "$CIRCLE_NODE_INDEX" != "0" || (cd $SRCDIR/test; ./gen_coverage_reports.sh):
+        parallel: true
 
 teardown:
   pre:
